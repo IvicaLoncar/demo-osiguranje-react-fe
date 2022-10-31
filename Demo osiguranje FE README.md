@@ -1,5 +1,13 @@
 # Opis funkcionalnosti Demo osiguranje react FE 
 
+## Programirano u 
+
+Visual Studio Code
+
+## Kratki opis
+
+Demo služi za demonstraciju poslovne aplikacije koja u pozadini ima bazu podataka, koriste se standardni pregledi podataka, tablični i pregled pojedinačnog sloga, te osnovne operacije nad podacima (pregled, dodavanje, promjena i brisanje).
+
 ## Tehnologije
 
 Koriste se:
