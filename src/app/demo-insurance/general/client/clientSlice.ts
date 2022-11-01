@@ -8,14 +8,18 @@ import { ColumnValue } from '../../core/models/column-value.model';
 import { dummyRestGetParams, RestGetParams } from '../../core/models/rest-get-params.model';
 import { dummyCustomData } from '../../core/models/custom-data.model';
 import { getGlobalConfig } from '../../core/config/global.config';
+import { CustomMessage } from '../../core/models/custom-message.model';
 
 
 export interface ClientState {
-  dataTable: ClientCollection
+  dataTable: ClientCollection,
+  clientLookup: ClientCollection
+
 }
 
 const initialState: ClientState = {
   dataTable: dummyClientCollection(),
+  clientLookup: dummyClientCollection(),
 };
 
 
@@ -166,7 +170,14 @@ export const clientSlice = createSlice({
       //console.log("došao u set displayed messages")
       //state.dataTable.dispalyedMessages = state.dataTable.messages;
       state.dataTable.messages = [];
-    },   
+    }, 
+    clearLookup: (state) => {
+      console.log("došao u clear lookup")
+      //state.dataTable.dispalyedMessages = state.dataTable.messages;
+      state.clientLookup.rows = [];
+      state.clientLookup.messages = [];
+    }, 
+
   },
   extraReducers: (builder) => {
     builder
@@ -178,13 +189,26 @@ export const clientSlice = createSlice({
         state.dataTable.status = 'idle';
         console.log("dohvaćeni podaci fulfilled " + JSON.stringify(action.payload.data))
         //console.log("dohvaćeni podaci " + JSON.stringify(action.payload))
-        let clients: Client[] = action.payload.data?.data !== undefined ? action.payload.data.data : [];
-        state.dataTable.rows = clients;
-        state.dataTable.pageNumber = action.payload.data?.metadata !== undefined ? action.payload.data.metadata.pageNumber : 0;
-        state.dataTable.rowsPerPage = action.payload.data?.metadata !== undefined ? action.payload.data.metadata.rowsPerPage : 0;
-        state.dataTable.totalNumberOfRows = action.payload.data?.metadata !== undefined ? action.payload.data.metadata.numberOfRows : 0;
-        state.dataTable.messages =  action.payload.data?.messages !== undefined ? action.payload.data?.messages : [];
-        state.dataTable.dispalyedMessages = [];
+        if (action.payload.data?.metadata.domain.trim().toUpperCase() === "Lookup".trim().toUpperCase())
+        {
+          let clients: Client[] = action.payload.data?.data !== undefined ? action.payload.data.data : [];
+          state.clientLookup.rows = clients;
+          state.clientLookup.pageNumber = action.payload.data?.metadata !== undefined ? action.payload.data.metadata.pageNumber : 0;
+          state.clientLookup.rowsPerPage = action.payload.data?.metadata !== undefined ? action.payload.data.metadata.rowsPerPage : 0;
+          state.clientLookup.totalNumberOfRows = action.payload.data?.metadata !== undefined ? action.payload.data.metadata.numberOfRows : 0;
+          state.clientLookup.messages =  action.payload.data?.messages !== undefined ? action.payload.data?.messages : [];
+          state.clientLookup.dispalyedMessages = [];
+        }
+        else
+        {
+          let clients: Client[] = action.payload.data?.data !== undefined ? action.payload.data.data : [];
+          state.dataTable.rows = clients;
+          state.dataTable.pageNumber = action.payload.data?.metadata !== undefined ? action.payload.data.metadata.pageNumber : 0;
+          state.dataTable.rowsPerPage = action.payload.data?.metadata !== undefined ? action.payload.data.metadata.rowsPerPage : 0;
+          state.dataTable.totalNumberOfRows = action.payload.data?.metadata !== undefined ? action.payload.data.metadata.numberOfRows : 0;
+          state.dataTable.messages =  action.payload.data?.messages !== undefined ? action.payload.data?.messages : [];
+          state.dataTable.dispalyedMessages = [];
+        }
       })
       .addCase(fetchClients.rejected, (state) => {
         state.dataTable.status = 'failed';
@@ -277,7 +301,7 @@ export const clientSlice = createSlice({
   },
 });
 
-export const { setCurrentRow, setColumnValue, clearMessages } = clientSlice.actions;
+export const { setCurrentRow, setColumnValue, clearMessages, clearLookup } = clientSlice.actions;
 
 
 // selektori
@@ -295,6 +319,15 @@ export const selectMessages = (state: RootState) => state.clients.dataTable.mess
 
 export const selectDisplayedMessages = (state: RootState) => state.clients.dataTable.dispalyedMessages;
 
+export const selectClientLookup = (state: RootState) => state.clients.clientLookup.rows;
+
+export const selectClientLookupPageNumber = (state: RootState) => state.clients.clientLookup.pageNumber;
+
+export const selectClientLookupRowsPerPage = (state: RootState) => state.clients.clientLookup.rowsPerPage;
+
+export const selectClientLookupTotalNumberOfRows = (state: RootState) => state.clients.clientLookup.totalNumberOfRows;
+
+export const selectClientLookupMessages = (state: RootState) => state.clients.clientLookup.messages;
 
 
 export default clientSlice.reducer;

@@ -394,7 +394,7 @@ export function InsurancePolicyTable()
           </div>}
       </div>
 
-      <BlockUI blocked={showBlockUI} className="z-4 m-0 p-0 " style={{height: 'calc(100vh - 7.5rem)', left: '-0.5rem'}}>
+      <BlockUI blocked={showBlockUI} className="z-4 m-0 p-0 bg-black-alpha-60" style={{height: 'calc(100vh - 7.5rem)', left: '-0.5rem'}}>
 
         <div className='grid'>
 

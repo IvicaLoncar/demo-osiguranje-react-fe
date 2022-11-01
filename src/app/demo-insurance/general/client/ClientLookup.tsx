@@ -13,6 +13,10 @@ import {
   selectTotalNumberOfRows,
   setCurrentRow,
   clearMessages,
+  selectClientLookup,
+  selectClientLookupPageNumber,
+  selectClientLookupRowsPerPage,
+  selectClientLookupTotalNumberOfRows,
 } from './clientSlice';
 
 import { ColumnDefinition } from '../../core/models/column-definition.model';
@@ -44,10 +48,10 @@ export const ClientLookup = ( props: any ) =>
 
   const dateConvert = dateConvertUtil();
 
-  const clients = useAppSelector(selectClients);
-  const pageNumber = useAppSelector(selectPageNumber);
-  const rowsPerPage = useAppSelector(selectRowsPerPage);
-  const totalNumberOfRows = useAppSelector(selectTotalNumberOfRows);
+  const clients = useAppSelector(selectClientLookup);
+  const pageNumber = useAppSelector(selectClientLookupPageNumber);
+  const rowsPerPage = useAppSelector(selectClientLookupRowsPerPage);
+  const totalNumberOfRows = useAppSelector(selectClientLookupTotalNumberOfRows);
 
   const messages = useAppSelector(selectMessages);
   //const displayedMessages = useAppSelector(selectDisplayedMessages);
@@ -123,6 +127,8 @@ export const ClientLookup = ( props: any ) =>
       //lazyParams.value.filters = filters.value ;
       //loadLazyData();
   }
+
+
 
   /*function getColumnDefinitions(): ColumnDefinition[]
   {
@@ -236,10 +242,10 @@ export const ClientLookup = ( props: any ) =>
   }
 
   const refreshData = () => {
-   /* console.log("refresh data")
+    console.log("refresh data")
    // setPageNumber2(0);
     getData(0, 20);
-    setCanLodaData(true);*/
+    setCanLodaData(true);
   }
 
   const getData = (pageNumber: number, rowsPerPage: number) => {
@@ -260,6 +266,9 @@ export const ClientLookup = ( props: any ) =>
       preparedFilter = preparedFilter + (preparedFilter.trim() !== "" ? "," : "") + (filterFieldName.trim() !== "" ? "name_" + filterFieldName.trim() : "");
       restGetParams.filter = preparedFilter;
 
+      restGetParams.includeColumns = "clientID,clientType,name,gsm,email,oib,mbr";
+      restGetParams.domain = "Lookup";
+
       dispatch(fetchClients(restGetParams));
 
       setShowProgressSpinner(false);
@@ -267,18 +276,32 @@ export const ClientLookup = ( props: any ) =>
     }, 700);
   }
 
-  const deleteRecord = () => {
-    setShowProgressSpinner(true)    
-    setShowMessageBox(false)
-
-    setTimeout(function() { 
-      dispatch(deleteClient(deleteRowID));
-
-      setShowProgressSpinner(false);
-      setShowBlockUI(false);  
-    }, 700);
+  const onRowDoubleClick = (event: any) => {
+    console.log("row double click " + JSON.stringify(event.data))
+    onConfirm(event.data);
   }
 
+  const selectRecord = (client: Client) => {
+    console.log("došao u select record " + JSON.stringify(client))
+    onConfirm(client);
+  }
+
+  function cellStyling(value: any, options: DataTableCellClassNameOptions): object | string
+  {
+    //console.log("cell style value: " + JSON.stringify(options.column.props.field))
+    return "line-height-1 overflow-hidden white-space-nowrap " 
+      + (options.column.props.field?.trim().toUpperCase() === "clientID".trim().toUpperCase() ? "right-100" : "");
+  }
+
+  const onConfirm = (client: Client) => {
+    props.confirmed(client);
+    //event.preventDefault();
+    //console.log("event u message boxu ")
+  }
+
+  const onCancel = () => {
+    props.canceled();
+  }
 
   const columnDefinitions: ColumnDefinition[] = getClientColumnDefinitionsLookup();
 
@@ -310,8 +333,7 @@ export const ClientLookup = ( props: any ) =>
 
   const rowButtonsBodyTemplate = (rowData: Client) => {
     return <> 
-      <Button className="p-button-text p-button-primary mr-1 -mb-2 -mt-2 p-2" onClick={() => showRowViewer(rowData.clientID !== undefined ? rowData.clientID : -1 )}><span className="pi pi-pencil"></span></Button>
-      <Button className="p-button-text p-button-danger mr-1 -mb-2 -mt-2 p-2" onClick={() => showDeleteMessage(rowData.clientID)}><span className="pi pi-times"></span></Button>
+      <Button className="p-button-text p-button-primary mr-1 -mb-2 -mt-2 p-2" onClick={() => selectRecord(rowData)}><span className="pi pi-check"></span></Button>
     </>
   } 
 
@@ -327,12 +349,6 @@ export const ClientLookup = ( props: any ) =>
 
 */
 
-  function cellStyling(value: any, options: DataTableCellClassNameOptions): object | string
-  {
-    //console.log("cell style value: " + JSON.stringify(options.column.props.field))
-    return "line-height-1 overflow-hidden white-space-nowrap " 
-      + (options.column.props.field?.trim().toUpperCase() === "clientID".trim().toUpperCase() ? "right-100" : "");
-  }
 
 
   return (
@@ -383,14 +399,23 @@ export const ClientLookup = ( props: any ) =>
           style={{display: 'flex', flexDirection: 'row', alignItems: 'stretch', width: '100%', height: '70vh'}}
     */
 
-        <div className="bg-red-200 " style={{width: 'calc(80vw)', height: 'calc(100vh - 9.5rem'}} >
+    <div className="bg-red-200 " style={{width: 'calc(83vw - 6.5rem)', height: 'calc(100vh - 14.5rem'}} >
+
+      <div className="flex align-content-center justify-content-center flex-wrap " >
+          {showProgressSpinner &&  
+          <div className="absolute z-5 flex align-content-center justify-content-center flex-wrap card-container blue-container" style={{height: 'calc(100vh - 14.4rem)'}}>
+              <ProgressSpinner className="flex align-items-center justify-content-center" strokeWidth="3" animationDuration="5" /> 
+          </div> }
+      </div>
+
+      <BlockUI blocked={showBlockUI} className="z-4 m-0 p-0 bg-black-alpha-30 " style={{height: 'calc(100vh - 14.4rem)'}}>
     
         <div className="grid w-full m-0 p-0" >
   
   
   
         <div className='col-12 m-0 py-2 pl-2 ' style={{backgroundColor: 'var(--surface-d)'}}>
-            <h2 className='m-0 p-0'>Pretraživanje klijenata (not implemented)</h2>
+            <h2 className='m-0 p-0'>Pretraživanje klijenata</h2>
           </div>
 
           <div className='col-12 m-0 p-0 ' style={{backgroundColor: 'var(--surface-c)'}}>
@@ -420,12 +445,12 @@ export const ClientLookup = ( props: any ) =>
                   onChange={(e) => setFilterFieldName(e.target.value)}   
                   />
               </div>
-              <Button className="p-button p-button-danger ml-1 flex align-items-center justify-content-center" icon="pi pi-times" onClick={() => refreshData()} />
+              <Button className="p-button p-button-danger ml-1 flex align-items-center justify-content-center" icon="pi pi-times" onClick={onCancel} />
             </div>
           </div>
 
           <div className="col-12 text-center " style={{backgroundColor: 'var(--surface-b)'}}>
-            <div className='m-0 p-0' style={{height: 'calc(100vh - 16.5rem)'}}>
+            <div className='m-0 p-0' style={{height: 'calc(100vh - 21.5rem)'}}>
                   
             <DataTable 
                value={clients} 
@@ -454,6 +479,7 @@ export const ClientLookup = ( props: any ) =>
                onPage={onPage} 
                onSort={onSort} 
                onFilter={onFilter} 
+               onRowDoubleClick={onRowDoubleClick}
             >
                   {dataTableColumns}     
                   <Column field="up" frozen alignFrozen="right"  body={rowButtonsBodyTemplate}>          
@@ -467,6 +493,8 @@ export const ClientLookup = ( props: any ) =>
       
         </div>
 
-        </div>
+      </BlockUI>
+
+    </div>
   );
 }

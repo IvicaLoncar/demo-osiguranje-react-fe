@@ -147,8 +147,5 @@ export function getClientColumnDefinitionsLookup(): ColumnDefinition[]
     { position: position++, field: 'email', header: 'Email', show: true, frozen: false, width: '9%' },
     { position: position++, field: 'oib', header: 'OIB', show: true, frozen: false, width: '6%' },
     { position: position++, field: 'mbr', header: 'MBR', show: true, frozen: false, width: '6%' },
-    { position: position++, field: 'dateFrom', header: 'Date from', show: true, frozen: false, width: '6%' },
-    { position: position++, field: 'dateTo', header: 'Date to', show: true, frozen: false, width: '6%' },
-    { position: position++, field: 'active', header: 'Active', show: true, frozen: false, width: '4%' },
   ];
 }

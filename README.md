@@ -42,14 +42,13 @@ Unutar demo projekta implementirano je:
 - dohvat tzv. list-of-values (LOV) podataka u react redux tj. šifrarnika koji se često prikazuju unutar neke kontrole za odabir npr. dropdown kontrole
 - korištenje primereact tema
 - korištenje flex i grid za layout kontrola u web aplikaciji
+- posebna komponenta za pretraživanje većih količina podataka koji nisu prikladni za dohvat odjednom, npr. za traženje klijenta
 
 
 ## U postupku implementacije
 
 U postupku:
-- posebna komponenta za pretraživanje većih količina podataka koji nisu prikladni za dohvat odjednom, npr. za traženje klijenta
-
-
+- update polica ne radi, problem je u BFF kojeg treba doraditi
 
 
 # Getting Started with Create React App

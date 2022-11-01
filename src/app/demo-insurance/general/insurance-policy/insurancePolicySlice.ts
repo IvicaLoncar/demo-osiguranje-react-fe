@@ -147,8 +147,24 @@ export const insurancePolicySlice = createSlice({
         switch(action.payload.name.trim().toUpperCase()) 
         { 
           case "insuranceTypeID".trim().toUpperCase(): { state.dataTable.currentRow.insuranceTypeID = action.payload.value; break; } 
-          case "clientIDPolicyHolder".trim().toUpperCase(): { state.dataTable.currentRow.clientIDPolicyHolder = action.payload.value; break; } 
-          case "clientIDInsured".trim().toUpperCase(): { state.dataTable.currentRow.clientIDInsured = action.payload.value; break; } 
+          case "clientIDPolicyHolder".trim().toUpperCase(): { 
+            state.dataTable.currentRow.clientIDPolicyHolder = action.payload.value;  
+            if (state.dataTable.currentRow.clientIDPolicyHolder === undefined)
+            {
+              state.dataTable.currentRow.clientNamePolicyHolder = undefined;
+            }
+            break;
+          } 
+          case "clientNamePolicyHolder".trim().toUpperCase(): { state.dataTable.currentRow.clientNamePolicyHolder = action.payload.value; break; } 
+          case "clientIDInsured".trim().toUpperCase(): { 
+            state.dataTable.currentRow.clientIDInsured = action.payload.value; 
+            if (state.dataTable.currentRow.clientIDPolicyHolder === undefined)
+            {
+              state.dataTable.currentRow.clientNameInsured = undefined;
+            }
+            break; 
+          } 
+          case "clientNameInsured".trim().toUpperCase(): { state.dataTable.currentRow.clientNameInsured = action.payload.value; break; } 
           case "dateFrom".trim().toUpperCase(): { state.dataTable.currentRow.dateFrom = action.payload.value; break; } 
           case "dateTo".trim().toUpperCase(): { state.dataTable.currentRow.dateTo = action.payload.value; break; } 
           case "active".trim().toUpperCase(): { state.dataTable.currentRow.active = action.payload.value; break; } 

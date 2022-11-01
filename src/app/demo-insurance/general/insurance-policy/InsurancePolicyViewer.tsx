@@ -9,6 +9,11 @@ import {
   clearMessages
 } from './insurancePolicySlice'
 
+import { 
+    clearLookup 
+} from '../client/clientSlice';
+
+
 import { Button } from 'primereact/button';
 import { ScrollPanel } from 'primereact/scrollpanel';
 import { Panel } from 'primereact/panel';
@@ -27,7 +32,7 @@ import { CustomMessage } from '../../core/models/custom-message.model';
 import { fetchInsuranceTypes, selectInsuranceTypeLOV, selectInsuranceTypeLOVLoaded } from '../insurance-type/insuranceTypeSlice';
 import { dummyRestGetParams, RestGetParams } from '../../core/models/rest-get-params.model';
 import { ClientLookup } from '../client/ClientLookup';
-import { MessageBox } from '../message-box/MessageBox';
+import { Client } from '../client/Client.model';
 
 
 export function InsurancePolicyViewer()
@@ -54,6 +59,7 @@ export function InsurancePolicyViewer()
     const [selectedInsurancePolicyType, setSelectedInsurancePolicyType] = useState(null);
     const [displayedMessages, setDisplayedMessages ] = useState([] as CustomMessage[])
 
+    const [ lookupTargetColumnName, setLookupTaragetColumnName] = useState("") 
 
 
     useEffect(() => {    
@@ -141,21 +147,62 @@ export function InsurancePolicyViewer()
 
     function openClientLookup(columnName: string)
     {
+        setLookupTaragetColumnName(columnName);
+
         setShowBlockUI(true)
-        setShowClientLookup(true)
 
         //                         <div className="h-full border-round bg-blue-500 text-white font-bold p-3 flex align-items-center justify-content-center"></div>
 
         // style={{width: 'calc(85vw - 10rem', height: 'calc(95vh - 10rem', top: '-3.5rem'}}
         setTimeout(function() { 
+
+            setShowClientLookup(true)
+            dispatch(clearLookup());
           //dispatch(saveInsurancePolicy());
     
           //setShowProgressSpinner(false);
-          setShowClientLookup(false);
-          setShowBlockUI(false);  
-        }, 2000);
+        //  setShowClientLookup(false);
+        //  setShowBlockUI(false);  
+        }, 200);
     }             
     
+
+    const confirmedClientLookup = (client: Client) => {
+        setShowClientLookup(false);
+
+        console.log("vratilo se nakon confirma " + lookupTargetColumnName + "   " + JSON.stringify(client))
+
+        switch(lookupTargetColumnName.trim().toUpperCase()) 
+        { 
+          case "clientIDPolicyHolder".trim().toUpperCase(): { 
+            setValue("clientIDPolicyHolder", client.clientID);
+            setValue("clientNamePolicyHolder", client.name);
+            break; 
+          } 
+          case "clientIDInsured".trim().toUpperCase(): { 
+            setValue("clientIDInsured", client.clientID);
+            setValue("clientNameInsured", client.name);
+            break; 
+          } 
+          default: { }
+        } 
+        setLookupTaragetColumnName("");
+
+        setTimeout(function() { 
+            setShowBlockUI(false);  
+        }, 200);
+    }
+
+
+    const cancelClientLookup = () => {
+        setShowClientLookup(false);
+        setLookupTaragetColumnName("");
+
+        setTimeout(function() { 
+            setShowBlockUI(false);  
+        }, 200);
+    }
+
     /*
                 <div className="bg-blue-200 flex align-items-center justify-content-center" style={{width: 'calc(80vw)', height: 'calc(100vh - 10.5rem'}} >
                     
@@ -164,14 +211,15 @@ export function InsurancePolicyViewer()
                 </div>
     */
 
+
+
     return (
         <div >
             <div className="flex align-content-center justify-content-center flex-wrap " >
     
                 {showClientLookup &&  true &&
-                <div className='absolute z-5 bg-green-300 flex align-content-center justify-content-center flex-wrap card-container blue-container m-0 mr-3 p-0' style={{width: '', height: 'calc(100vh - 8.5rem)'}}>
-
-                  <ClientLookup />
+                <div className=' absolute z-5 flex align-content-center justify-content-center flex-wrap card-container blue-container m-0 mr-3 p-0' style={{width: '', height: 'calc(100vh - 8.5rem)'}}>
+                  <ClientLookup confirmed={confirmedClientLookup} canceled={cancelClientLookup}/>
                 </div>}
 
 
@@ -181,7 +229,7 @@ export function InsurancePolicyViewer()
                 </div> }
             </div>
 
-            <BlockUI blocked={showBlockUI} className="z-4 m-0 p-0 " style={{height: 'calc(100vh - 7.5rem)', left: '-0.5rem'}}>
+            <BlockUI blocked={showBlockUI} className="z-4 m-0 p-0 bg-black-alpha-60" style={{height: 'calc(100vh - 7.5rem)', left: '-0.5rem'}}>
 
                 <div className='grid w-full'>
 
@@ -251,6 +299,7 @@ export function InsurancePolicyViewer()
                                                             onChange={(e) => setValue("clientIDPolicyHolder", e.value)}
                                                         />
                                                         <Button icon="pi pi-search" className="p-button-primary" onClick={() => openClientLookup("clientIDPolicyHolder")}/>
+                                                        <Button icon="pi pi-times" className="p-button-primary " onClick={() => setValue("clientIDPolicyHolder", undefined)}/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -281,7 +330,8 @@ export function InsurancePolicyViewer()
                                                             value={insurancePolicy.clientIDInsured} 
                                                             onChange={(e) => setValue("clientIDInsured", e.value)}
                                                         />
-                                                        <Button icon="pi pi-search" className="p-button-primary" onClick={() => openClientLookup("clientIDPolicyHolder")}/>
+                                                        <Button icon="pi pi-search" className="p-button-primary" onClick={() => openClientLookup("clientIDInsured")}/>
+                                                        <Button icon="pi pi-times" className="p-button-primary " onClick={() => setValue("clientIDInsured", undefined)}/>
                                                     </div>
                                                 </div>
                                             </div>
