@@ -51,9 +51,42 @@ U postupku:
 - update polica ne radi, problem je u BFF kojeg treba doraditi
 
 
+## Slike
+Prikaz podataka u tablici, header i footer su fiksirani na vrh i dno
 ![Alt text](/documentation/images/Image001.png?raw=true "Image 001")
 
-![Alt text](/documentation/images/Image002.png?raw=true "Image 001")
+Blokiranje dijela web aplikacije i prikaz napredovanja kod operacija koje traju kao npr. učitavnje podataka sa servera
+![Alt text](/documentation/images/Image002.png?raw=true "Image 002")
+
+Pregled podataka jednog sloga s vrstom unosa kod kojeg je moguće odabrati jednu od ponuđenih opcija
+![Alt text](/documentation/images/Image003.png?raw=true "Image 003")
+
+Pregled podataka jednog sloga s poljima koja otvaraju pretraživače (povećalo)
+![Alt text](/documentation/images/Image004.png?raw=true "Image 004")
+
+Primjer pretraživača koji se otvara iznad već pokrenute web aplikacije
+![Alt text](/documentation/images/Image005.png?raw=true "Image 005")
+
+Prilagođavanje web aplikacije ako se poveća zoom u web browseru (ovako bi izgledalo na malim monitorima)
+![Alt text](/documentation/images/Image006.png?raw=true "Image 006")
+
+Prilagođavanje web aplikacije ako se smanji zoom u web browseru (ovako bi izgledalo na velikim monitorima)
+![Alt text](/documentation/images/Image007.png?raw=true "Image 007")
+
+Prilagođavanje web aplikacije kad se promjeni veličina web browsera (isto vrijedi i za različite veličine monitora)
+![Alt text](/documentation/images/Image008.png?raw=true "Image 008")
+
+Izgled jednog sloga ako se promijeni veličina web browsera
+![Alt text](/documentation/images/Image009.png?raw=true "Image 009")
+
+Primjer drugačije teme
+![Alt text](/documentation/images/Image010.png?raw=true "Image 010")
+
+Primjer drugačije teme
+![Alt text](/documentation/images/Image011.png?raw=true "Image 011")
+
+Primjer drugačije teme
+![Alt text](/documentation/images/Image012.png?raw=true "Image 012")
 
 # Getting Started with Create React App
 

@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
+import "primereact/resources/themes/bootstrap4-light-purple/theme.css";  //theme
 import "primereact/resources/primereact.min.css";                  //core css
 import "primeicons/primeicons.css";                                //icons
 import 'primeflex/primeflex.css';
