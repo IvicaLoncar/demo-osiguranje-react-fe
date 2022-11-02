@@ -265,7 +265,7 @@ export function InsuranceTypeTable()
 
       setShowProgressSpinner(false);
       setShowBlockUI(false);  
-    }, 700);
+    }, 20700);
   }
 
   const deleteRecord = () => {

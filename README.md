@@ -51,6 +51,10 @@ U postupku:
 - update polica ne radi, problem je u BFF kojeg treba doraditi
 
 
+![Alt text](/documentation/images/Image001.png?raw=true "Image 001")
+
+![Alt text](/documentation/images/Image002.png?raw=true "Image 001")
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
